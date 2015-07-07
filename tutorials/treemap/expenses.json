@@ -1,0 +1,34 @@
+{
+  "categoria": "Despesas Totais",
+  "subitens": [{
+    "categoria": "Água",
+    "valor": 67.00
+  },{
+    "categoria": "Energia",
+    "valor": 112.00
+  },{
+    "categoria": "Aluguel",
+    "valor": 900.00
+  },{
+    "categoria": "Alimentação",
+    "subitens": [{
+      "categoria": "Almoço no Bandejão",
+      "valor": 84.00
+    },{
+      "categoria": "Compra do mês",
+      "valor": 316.00
+    }]
+  },{
+    "categoria": "Transporte",
+    "subitens": [{
+      "categoria": "Gasolina",
+      "valor": 250.00
+    },{
+      "categoria": "Troca de Óleo",
+      "valor": 120.00
+    },{
+      "categoria": "Ônibus",
+      "valor": 26.40
+    }]
+  }]
+}
