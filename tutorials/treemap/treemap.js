@@ -49,9 +49,12 @@ treemapLayout.children(function(node) {
 
 var nodes = treemapLayout.nodes(expenses);
 
-var selection = d3.select(".treemap").attr("width", width + "px").attr(
-		"height", height + "px").selectAll("rect.treemap-rect").data(
-		nodes);
+var svgTag = d3.select("body").append("svg")
+  .attr("class", "treemap")
+  .attr("width", width + "px")
+  .attr("height", height + "px");
+
+var selection = svgTag.selectAll("rect").data(nodes);
 
 selection.enter().append("rect").attr("class", "treemap-rect").attr("x",
 		function(d) {

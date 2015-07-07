@@ -68,8 +68,6 @@ Para começar a construir nossa visualização, vamos partir de uma página HTML
 </head>
 <body>
 
-<svg></svg>
-
 <script src="../../lib/d3.v3.min.js"></script>
 <script src="treemap.js"></script>
 
@@ -77,7 +75,7 @@ Para começar a construir nossa visualização, vamos partir de uma página HTML
 </html>
 ```
 
-No código acima, temos a estrutura mínima de um documento HTML. Além disso, há uma tag SVG no corpo da página, que iremos utilizar posteriormente. Por fim, importamos dois arquivos Javascript. O primeiro deles é a própria bilioteca D3.js. O segundo, `treemap.js`, é o código que iremos desenvolver nos passos seguintes.
+No código acima, temos a estrutura mínima de um documento HTML. Observe que importamos dois arquivos Javascript. O primeiro deles é a própria bilioteca D3.js. O segundo, `treemap.js`, é o código que iremos desenvolver nos passos seguintes.
 
 
 ### Usando Layouts
@@ -117,7 +115,7 @@ var nodes = treemapLayout.nodes(expenses);
 
 Se inspecionarmos o resultado dessa chamada, veremos que ela retorna um vetor com um elemento para cada nodo dos nossos dados, onde cada elemento possui os dados abaixo:
 
-```json
+```javascript
 {
   categoria: "Alimentação",
   subitens: ...
@@ -138,7 +136,22 @@ Concluindo, um layout nos ajuda a preparar os dados para exibição, mas não é
 
 ### Criando os Elementos Visuais
 
-Para de fato desenhar os retângulos do Treemap, vamos usar  
+Para de fato desenhar os retângulos do Treemap, vamos criar novas tags no corpo da nossa página. A manipulação do DOM (Document Object Model) é feita no D3 usando um estilo parecido com a popular API JQuery. Ou seja, selecionamos um conjunto de elementos e trabalhamos nessa seleção encadeando chamadas de funções. No entanto, o D3 introduz um conceito novo, denominado _data joins_. É importante entender esse conceito para se trabalhar com o D3. Uma introdução ao assunto pode ser encontrada em http://bost.ocks.org/mike/join/ .
+
+Antes de criar os retângulos, precisamos criar um contâiner para eles:
+
+```javascript
+var svgTag = d3.select("body").append("svg")
+  .attr("class", "treemap")
+  .attr("width", width + "px")
+  .attr("height", height + "px");
+```
+
+No código acima, selecionamos o corpo da página usando a função `d3.select`. Em seguida, adicionamos uma nova tag do tipo SVG dentro da seleção resultante por meio da chamada ao método `append`. A partir daí, a seleção resultante passa a ser a tag SVG. Em seguida encadeamos três chamadas à função `attr`. Essa função define o valor de um atributo para os elementos da seleção. Observe que tal função sempre retorna a própria seleção alvo da chamada. Dessa forma, definimos os atributos `class`, `width` e `height` da tag SVG que criamos.
+
+
+
+Especificamente, podemos usar elementos `rect` do SVG, que é um padrão do W3C para desenho vetorial.
 
 
 
