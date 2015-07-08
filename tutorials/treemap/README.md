@@ -38,7 +38,7 @@ var expenses = {
   },{
     "categoria": "Alimentação",
     "subitens": [{
-      "categoria": "Almoço no Bandejão",
+      "categoria": "Almoço no RU",
       "valor": 84.00
     },{
       "categoria": "Compra do mês",

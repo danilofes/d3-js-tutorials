@@ -12,7 +12,7 @@ var expenses = {
   },{
     "categoria": "Alimentação",
     "subitens": [{
-      "categoria": "Almoço no Bandejão",
+      "categoria": "Almoço no RU",
       "valor": 84.00
     },{
       "categoria": "Compra do mês",
@@ -37,6 +37,9 @@ var width = 600;
 var height = 400;
 var treemapLayout = d3.layout.treemap();
 
+
+treemapLayout.padding([30, 10, 10, 10]);
+
 treemapLayout.size([width, height]);
 
 treemapLayout.value(function(node) {
@@ -49,19 +52,36 @@ treemapLayout.children(function(node) {
 
 var nodes = treemapLayout.nodes(expenses);
 
+var colorScale = function(i) {
+  var step = 256/nodes.length;
+  return "hsl(" + i * step + ", 80%, 70%)";
+};
+
 var svgTag = d3.select("body").append("svg")
   .attr("class", "treemap")
   .attr("width", width + "px")
   .attr("height", height + "px");
 
-var rects = svgTag.selectAll("rect").data(nodes)
+var groups = svgTag.selectAll("g").data(nodes).enter().append("g");
 
-rects.enter().append("rect");
+groups
+  .attr("transform", function(d) {return "translate(" + d.x + "," + d.y + ")";});
 
-rects
-  .attr("x", function(d) {return d.x;})
-  .attr("y", function(d) {return d.y;})
+groups.append("rect")
   .attr("width", function(d) {return d.dx;})
-  .attr("height", function(d) {return d.dy;});
+  .attr("height", function(d) {return d.dy;})
+  .attr("fill", function(d, i) {return colorScale(i);});
+//  .attr("fill", function(d) {return d.children ? "white" : colorScale(d.categoria);});
+
+groups.append("text")
+  .attr("x", function(d) {return d.dx/2;})
+  .attr("y", 20)
+  .attr("text-anchor", "middle")
+  .text(function(d) {return d.categoria;});
+
+//rects.attr("fill", function(d) {return d.depth <= 1 ? colorScale(d.categoria) : "#fff";});
+//rects.attr("fill-opacity", function(d) {return d.depth <= 1 ? 1 : 0.0;})
+
+
 
 
