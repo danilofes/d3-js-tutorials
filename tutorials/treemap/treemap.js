@@ -54,15 +54,14 @@ var svgTag = d3.select("body").append("svg")
   .attr("width", width + "px")
   .attr("height", height + "px");
 
-var selection = svgTag.selectAll("rect").data(nodes);
+var rects = svgTag.selectAll("rect").data(nodes)
 
-selection.enter().append("rect").attr("class", "treemap-rect").attr("x",
-		function(d) {
-			return d.x;
-		}).attr("y", function(d) {
-	return d.y;
-}).attr("width", function(d) {
-	return d.dx;
-}).attr("height", function(d) {
-	return d.dy;
-});
+rects.enter().append("rect");
+
+rects
+  .attr("x", function(d) {return d.x;})
+  .attr("y", function(d) {return d.y;})
+  .attr("width", function(d) {return d.dx;})
+  .attr("height", function(d) {return d.dy;});
+
+

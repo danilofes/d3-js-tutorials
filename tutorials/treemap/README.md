@@ -8,6 +8,14 @@ Um Treemap divide a área recursivamente em retângulos, de forma que a área de
 ![Exemplo de Treemap](treemap-example.png)
 
 
+Antes de prosseguir, vale ressaltar que assumimos um conhecimento básico dos seguintes tópicos:
+* Programação em Javascript
+* HTML e o padrão de desenho vetorial SVG
+* Estilos CSS
+
+Caso o leitor não conheça nada sobre algum dos itens acima, recomendamos que procure primeiro outros materiais introdutórios
+nos respectivos assuntos. No entanto, nenhum conhecimento em detalhes é exigido para acompanhar este tutorial.  
+
 
 ## Dados de Exemplo
 
@@ -149,9 +157,46 @@ var svgTag = d3.select("body").append("svg")
 
 No código acima, selecionamos o corpo da página usando a função `d3.select`. Em seguida, adicionamos uma nova tag do tipo SVG dentro da seleção resultante por meio da chamada ao método `append`. A partir daí, a seleção resultante passa a ser a tag SVG. Em seguida encadeamos três chamadas à função `attr`. Essa função define o valor de um atributo para os elementos da seleção. Observe que tal função sempre retorna a própria seleção alvo da chamada. Dessa forma, definimos os atributos `class`, `width` e `height` da tag SVG que criamos.
 
+Vamos agora criar elementos RECT, dentro do container SVG, para cada nodo de dados:
 
+```javascript
+var rects = svgTag.selectAll("rect").data(nodes)
 
-Especificamente, podemos usar elementos `rect` do SVG, que é um padrão do W3C para desenho vetorial.
+rects.enter().append("rect");
+
+rects
+  .attr("x", function(d) {return d.x;})
+  .attr("y", function(d) {return d.y;})
+  .attr("width", function(d) {return d.dx;})
+  .attr("height", function(d) {return d.dy;});
+```
+
+Vamos analisar em detalhes o código acima. Primeiro, `svgTag.selectAll("rect")` seleciona todos as tags RECT dentro da tag SVG. Alguém poderia se perguntar porque fazer isso, se sabemos que não existem elementos RECT ainda.
+Na verdade, nossa intenção é mapear tags da página aos nodos de dados correspondentes (ou seja, fazer um _data joins_), o que ocorre na chamada `.data(nodes)` que vem em seguida. Essa chamada gerará três seleções de elementos que representam 
+três estados possíveis (mais detalhes em http://bl.ocks.org/mbostock/3808218):
+
+* _enter_: representa os dados novos para os quais não existem tags correspondentes na página. No nosso caso, a página estava vazia e todos os dados cairão nessa seleção.
+* _update_: representa as tags existentes que foram mapeadas para um nodo de dados. Essa seleção estará vazia. 
+* _exit_: representa as tags existentes para as quais não há dados. Essa seleção estará vazia também. Ela só existirá quando houver mais tags do que dados no _join_.
+
+A chamada `rects.enter()` nos permite especificar exatamente o que fazer para a seleção _enter_. No caso, o que queremos é criar a tag RECT para cada nodo do dados.  
+
+Em seguida, usamos a seleção `rects`, que agora corresponde à união das seleções _enter_ e _update_, para atualizar os atributos da tag RECT de acordo com os dados. Isso é feito com várias chamadas a função `attr`, como de costume. No entanto, há uma novidade nessas chamadas. Em vez de passar um valor como segundo parâmetro, estamos passando uma função. Essa função recebe como parâmetro o nodo de dado associado a tag, e podemos usá-lo para obter os valores de `x`, `y`, `dx` e `dy`.
+
+Para finalizar nosso Treemap básico, vamos definir a borda e cor de preenchimento dos retângulos via estilos CSS:
+```css
+.treemap rect {
+  fill: #cccccc;
+  stroke: black;
+  stroke-width: 1;
+}
+```
+
+Pronto! Eis o resultado:
+
+TODO: colocar imagem
+
+## Adicionando Rótulos e Cores
 
 
 
