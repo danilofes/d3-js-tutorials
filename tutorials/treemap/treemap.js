@@ -38,7 +38,7 @@ var height = 400;
 var treemapLayout = d3.layout.treemap();
 
 
-treemapLayout.padding([30, 10, 10, 10]);
+treemapLayout.padding([40, 10, 10, 10]);
 
 treemapLayout.size([width, height]);
 
@@ -71,17 +71,16 @@ groups.append("rect")
   .attr("width", function(d) {return d.dx;})
   .attr("height", function(d) {return d.dy;})
   .attr("fill", function(d, i) {return colorScale(i);});
-//  .attr("fill", function(d) {return d.children ? "white" : colorScale(d.categoria);});
 
 groups.append("text")
   .attr("x", function(d) {return d.dx/2;})
-  .attr("y", 20)
+  .attr("y", 18)
   .attr("text-anchor", "middle")
   .text(function(d) {return d.categoria;});
 
-//rects.attr("fill", function(d) {return d.depth <= 1 ? colorScale(d.categoria) : "#fff";});
-//rects.attr("fill-opacity", function(d) {return d.depth <= 1 ? 1 : 0.0;})
-
-
-
+groups.append("text")
+  .attr("x", function(d) {return d.dx/2;})
+  .attr("y", 34)
+  .attr("text-anchor", "middle")
+  .text(function(d) {return "R$ " + d.value;});
 
