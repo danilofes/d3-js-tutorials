@@ -77,13 +77,15 @@ Para começar a construir nossa visualização, vamos partir de uma página HTML
 <body>
 
 <script src="../../lib/d3.v3.min.js"></script>
-<script src="treemap.js"></script>
+<script>
+// aqui será feito o código
+</script>
 
 </body>
 </html>
 ```
 
-No código acima, temos a estrutura mínima de um documento HTML. Observe que importamos dois arquivos Javascript. O primeiro deles é a própria bilioteca D3.js. O segundo, `treemap.js`, é o código que iremos desenvolver nos passos seguintes.
+No código acima, temos a estrutura mínima de um documento HTML. Observe que importamos um arquivo Javascript, que é a própria bilioteca D3.js. Em seguinda, temos um tag SCRIPT que conterá o código que iremos desenvolver nos passos seguintes.
 
 
 ### Usando Layouts
@@ -194,14 +196,93 @@ Para finalizar nosso Treemap básico, vamos definir a borda e cor de preenchimen
 
 Pronto! Eis o resultado:
 
-TODO: colocar imagem
+![Treemap Básico](treemap-basic.png)
+
+
+
 
 ## Adicionando Rótulos e Cores
 
+Até agora conseguimos desenhar os retângulos nas posições corretas e com o tamanho desejado. Porém, nossa visualização
+ainda tem problemas óbvios como:
+* Não sabemos o que cada retângulo representa.
+* Não temos noção da hierarquia de categorias.
 
+Para melhorar nosso Treemap, vamos começar adicionando rótulos para identificar os retângulos. Para isso, podemos criar elementos
+da seguinte maneira. Criamos um tag G, que representa um grupo de tags, para cada nodo dos dados e dentro dela criamos a tag RECT para o retângulo e uma ou mais tags TEXT para imprimir rótulos. O código reestruturado ficará como o abaixo:
 
+```javascript
+var groups = svgTag.selectAll("g").data(nodes).enter().append("g");
 
+groups
+  .attr("transform", function(d) {return "translate(" + d.x + "," + d.y + ")";});
 
+groups.append("rect")
+  .attr("width", function(d) {return d.dx;})
+  .attr("height", function(d) {return d.dy;});
+
+groups.append("text")
+  .attr("x", function(d) {return d.dx/2;})
+  .attr("y", 16)
+  .attr("text-anchor", "middle")
+  .text(function(d) {return d.categoria;});
+
+groups.append("text")
+  .attr("x", function(d) {return d.dx/2;})
+  .attr("y", 32)
+  .attr("text-anchor", "middle")
+  .text(function(d) {return "R$ " + d.value.toFixed(2);});
+```
+
+Observe que a tag G possui o atributo `transform` para aplicar uma translação em todos os elementos contidos no mesmo, para evitar de repetir as posições `x` e `y` do nodo em cada tag. 
+Além disso, observe que criamos dois rótulos, um para exibir a categoria e outro para imprimir o valor. Ambos estão posicionados no centro do retângulo, a uma distância fixa do topo.
+
+Por padrão, as areas das categorias filhas sobrepõem totalmente a área da categoria pai. Para permitir que o aninhamento seja visível, vamos adicionar uma margem usando a configuração `padding` do layout Treemap:
+
+```javascript
+treemapLayout.padding([38, 8, 8, 8]);
+```
+
+A margem de topo foi definida de forma a dar espaço para exibição do rótulo (38 pixels) e as demais margens foram definidas como 8 pixels.
+
+Por fim, vamos atribuir uma cor de fundo diferente para cada retângulo, tornando mais fácil a distinção entre eles. Para isso, vamos fazer um mapeamento simples do índice de um nodo de dados em uma cor no espaço HSL:
+
+```javascript
+var colorScale = function(i) {
+  var step = 256/nodes.length;
+  return "hsl(" + i * step + ", 80%, 70%)";
+}; 
+```
+
+Esta função recebe um índice `i` e retorna uma cor. O índice é usado para escolher o valor da componente _hue_, que é um valor entre 0 e 255. Os valores de _saturation_ e _lightness_ são fixos para que as cores sejam harmoniosas com a cor da fonte.
+Agora, basta definir o atributo `fill` do retângulo usando nossa escala de cores:
+
+```javascript
+groups.append("rect")
+  .attr("width", function(d) {return d.dx;})
+  .attr("height", function(d) {return d.dy;})
+  .attr("fill", function(d, i) {return colorScale(i);});
+```
+
+Por fim, precisamos de algumas adaptações no estilo pois não queremos mais definir uma cor de fundo cinza. Além disso, precisamos de alguns ajustes na fonte:
+
+```css
+.treemap rect {
+  stroke: black;
+  stroke-width: 1;
+}
+.treemap text {
+  font-family: Arial;
+  font-size: 12px;
+}
+```
+
+Pronto, eis o resultado final:
+
+![Treemap Básico](treemap-complete.png)
+
+Agora sim podemos analisar o dados e derivar conclusões. Por exemplo, fica nítido que o aluguel é a principal despesa. Transporte e alimentação possuem pesos similares, enquanto água e luz possuem pouco impacto nas despesas totais.
+O código completo desenvolvido nesse tutorial pode ser encontrado [aqui](treemap.html).
 
 
 

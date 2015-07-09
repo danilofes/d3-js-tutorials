@@ -37,8 +37,7 @@ var width = 600;
 var height = 400;
 var treemapLayout = d3.layout.treemap();
 
-
-treemapLayout.padding([40, 10, 10, 10]);
+treemapLayout.padding([38, 8, 8, 8]);
 
 treemapLayout.size([width, height]);
 
@@ -74,13 +73,13 @@ groups.append("rect")
 
 groups.append("text")
   .attr("x", function(d) {return d.dx/2;})
-  .attr("y", 18)
+  .attr("y", 16)
   .attr("text-anchor", "middle")
   .text(function(d) {return d.categoria;});
 
 groups.append("text")
   .attr("x", function(d) {return d.dx/2;})
-  .attr("y", 34)
+  .attr("y", 32)
   .attr("text-anchor", "middle")
-  .text(function(d) {return "R$ " + d.value;});
+  .text(function(d) {return "R$ " + d.value.toFixed(2);});
 
