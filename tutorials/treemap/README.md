@@ -1,4 +1,7 @@
-# Treemap
+# Criando uma Visualização Treemap
+
+__Autores__: Danilo Ferreira, Guilherme Avelino e Hudson Borges
+
 
 Neste tutorial vamos ensinar os conceitos necessários para construir uma visualização Treemap.
 Esse tipo de visualização é apropriada para representar o relacionamento parte/todo quando os dados
